@@ -1,0 +1,1 @@
+ALTER TABLE shift_time ADD COLUMN IF NOT EXISTS shift_type SMALLINT;

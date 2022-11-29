@@ -1,0 +1,83 @@
+server:
+  port: 50001
+spring:
+  # Database configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kundoluk-ms-school
+    username: postgres
+    password: 8888
+  data:
+    redis:
+      repositories:
+        enabled: false
+  jpa:
+    #show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        #generate_statistics: true
+        jdbc:
+          batch_size: 10
+        order_inserts: true
+  application:
+    name: Kundoluk
+  # Redis specific configurations
+  cache:
+    type: redis
+    redis:
+      cache-null-values: false
+      time-to-live: 600000
+      use-key-prefix: true
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+
+
+
+#TOKEN LIFE = 60 Days
+jwt:
+  token:
+    secret: jwtappdemo
+    expired:  5184000000
+    refresh-expired:  5184000000
+
+## RabbitMQ Properties
+rabbit:
+  relay:
+    host: 127.0.0.1
+    port: 61613
+  client:
+    login:  guest
+    pass: guest
+rabbitmq:
+    queueName:  spring-boot
+    exchangeName: spring-boot-exchange
+    routingKey: spring-boot.routingKey
+
+app:
+  storage:
+    location: ./uploads
+  firebase-configuration-file: google/kundoluk-test-notification-firebase-adminsdk-hlonk-d1183f54dd.json
+
+
+yandex:
+  storage:
+    cred:
+      accessKey:  M6nWSE3--x2R3rVUCDXD
+      secretKey:  f5U7GxIETc1zflfyMVxADXvYg4oXhkT-WJwTzfgq
+    dir:
+      answer-attach:  project.dev.test
+      questionAttach: project.dev.question
+      attachment: project.prod.attachment
+      avatar: project.dev.avatar
+
+#sentry:
+#  dsn: https://55f294f4175f45bc9340bbb794abc681@o315069.ingest.sentry.io/1794752

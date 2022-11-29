@@ -1,0 +1,2 @@
+ALTER TABLE schedule
+    ADD COLUMN IF NOT EXISTS schedule_group_id BIGINT REFERENCES schedule_group (id) ON UPDATE CASCADE ON DELETE CASCADE;

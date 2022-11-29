@@ -1,0 +1,44 @@
+package kg.kundoluk.school.repository;
+
+import kg.kundoluk.school.dto.projection.AnalyticSchoolCount;
+import kg.kundoluk.school.dto.projection.CalendarTopicClass;
+import kg.kundoluk.school.dto.projection.GradeCountAnalytic;
+import kg.kundoluk.school.model.instructor.CalendarTopic;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public interface TopicAnalyticRepository extends JpaRepository<CalendarTopic, Long> {
+
+    @Query(value = "select concat(p.last_name,' ',p.first_name) as instructorTitle, count(ct.id) as totalCount\n" +
+            "from person p left join calendar_plan cp on cp.person_id = p.id\n" +
+            "    left join calendar_topic ct on ct.calendar_plan_id = cp.id\n" +
+            "    left join school_class sc on cp.class_id = sc.id\n" +
+            "where sc.school_id=?1 and (ct.created_at is null or ct.created_at between ?2 and ?3) and p.archived=false group by p.id, p.last_name order by p.last_name",nativeQuery = true)
+    List<GradeCountAnalytic> getInstructorTopicCount(Long schoolId, LocalDate startDate, LocalDate endDate);
+
+
+    @Query(value = "select sch.id as schoolId, sch.school_name as schoolName, count(ct.id) as totalCount\n" +
+            "from school sch\n" +
+            "         left join school_class scl on sch.id = scl.school_id\n" +
+            "         left join calendar_plan cp on scl.id = cp.class_id\n" +
+            "         left join calendar_topic ct on cp.id = ct.calendar_plan_id\n" +
+            "where sch.rayon_id=?1 and (ct.created_at is null or ct.created_at between ?2 and ?3)  group by sch.id",nativeQuery = true)
+    List<AnalyticSchoolCount> getTopicCountBySchool(Long rayonId, LocalDate startDate, LocalDate endDate);
+
+    @Query(value = "select concat(scl.level,'',scl.label) as classTitle,\n" +
+            "       ct.title as topicTitle,\n" +
+            "       ct.date_plan as topicDatePlan,\n" +
+            "       c2.title as courseTitle,\n" +
+            "       c2.title_ru as courseTitleRU,\n" +
+            "       c2.title_kg as courseTitleKG\n" +
+            "from calendar_topic ct\n" +
+            "         left join calendar_plan cp on ct.calendar_plan_id = cp.id\n" +
+            "         left join school_class scl on cp.class_id = scl.id\n" +
+            "         left join school_course c on cp.course_id = c.id\n" +
+            "         left join course c2 on c.course_id = c2.id\n" +
+            "where cp.person_id=?1 and cp.class_id=?2 order by ct.date_plan",nativeQuery = true)
+    List<CalendarTopicClass> getInstructorClassList(Long instructorId, Long classId);
+}

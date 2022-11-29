@@ -1,0 +1,2 @@
+ALTER TABLE calendar_plan
+    ADD COLUMN IF NOT EXISTS is_default BOOLEAN DEFAULT FALSE;

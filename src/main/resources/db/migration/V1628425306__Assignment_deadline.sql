@@ -1,0 +1,1 @@
+ALTER TABLE assignment ADD COLUMN IF NOT EXISTS deadline_at DATE;

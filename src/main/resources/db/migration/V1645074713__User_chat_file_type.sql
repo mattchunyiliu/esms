@@ -1,0 +1,1 @@
+ALTER TABLE user_chat_message ADD COLUMN IF NOT EXISTS attachment_type SMALLINT DEFAULT 0;
